@@ -26,7 +26,8 @@ export function Login(){
   async function handleLogin(data: validationFormData){
     try {
       await api.post('/login', data, { headers: { 'Content-Type': 'application/json' } }).then(response => {
-        Cookies.set('token', response.data.access_token, { expires: 30, path: '/' })
+        Cookies.set('token', response.data.access_token, { expires: 10, path: '/' })
+        api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
         router.push('/dashboard');
       });
     }catch{
