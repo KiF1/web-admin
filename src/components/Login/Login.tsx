@@ -24,10 +24,11 @@ export function Login(){
   const router = useRouter();
 
   async function handleLogin(data: validationFormData){
+
     try {
       await api.post('/login', data, { headers: { 'Content-Type': 'application/json' } }).then(response => {
-        Cookies.set('token', response.data.access_token , { expires: 5, path: '/' })
-        Cookies.set('role', response.data.role , { expires: 5, path: '/' })
+        const combinedValue =  response.data.access_token + '|' + response.data.role
+        Cookies.set('token_role', combinedValue , { expires: 5, path: '/' })
         router.push('/dashboard');
       });
     }catch{

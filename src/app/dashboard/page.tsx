@@ -26,7 +26,9 @@ export interface Representante{
 }
 
 export default function Dashboard(){
-  const role = Cookies.get("role");
+  const tokenRole = Cookies.get('token_role');
+  const value = tokenRole?.split('|');
+  const role = value !== undefined ? value[1] : ''
 
   const { data: users, refetch } = useQuery<User[]>(['users'], async () => {
     const response = await api.get('/users/all');
