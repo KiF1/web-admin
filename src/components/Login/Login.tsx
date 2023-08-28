@@ -26,8 +26,14 @@ export function Login(){
   async function handleLogin(data: validationFormData){
     try {
       await api.post('/login', data, { headers: { 'Content-Type': 'application/json' } }).then(response => {
-        Cookies.set('token', response.data.access_token , { expires: 5, path: '/' })
-        Cookies.set('role', response.data.role , { expires: 5, path: '/' })
+        const cookieData = {
+          token: response.data.access_token,
+          role: response.data.role
+        };
+        
+        for (const [cookieName, cookieValue] of Object.entries(cookieData)) {
+          Cookies.set(cookieName, cookieValue, { expires: 5, path: '/' });
+        }
         router.push('/dashboard');
       });
     }catch{
