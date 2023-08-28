@@ -28,7 +28,6 @@ export function Login(){
       await api.post('/login', data, { headers: { 'Content-Type': 'application/json' } }).then(response => {
         Cookies.set('token', response.data.access_token , { expires: 5, path: '/' })
         Cookies.set('role', response.data.role , { expires: 5, path: '/' })
-        api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
         router.push('/dashboard');
       });
     }catch{

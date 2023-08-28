@@ -8,6 +8,10 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+interface Props {
+  refetch : () => void;
+}
+
 const validationGroupFormSchema = z.object({
   name: z.string().min(1, { message: 'Informe um nome válido' }),
   email: z.string().min(1, { message: 'Informe um email válido' }).email(),
@@ -16,9 +20,8 @@ const validationGroupFormSchema = z.object({
 
 type validationFormData = z.infer<typeof validationGroupFormSchema>
 
-export function ButtonNewGroup(){
+export function ButtonNewGroup({ refetch }: Props){
   const [error, setError] = useState<boolean | null>(null);
-  console.log(error);
   const { handleSubmit, register, reset, formState: { isSubmitting, errors } } = useForm<validationFormData>({
     resolver: zodResolver(validationGroupFormSchema)
   });
@@ -26,8 +29,9 @@ export function ButtonNewGroup(){
   async function handleGroup(data: validationFormData){
     try {
       await api.post('/admin/representantes', data, { headers: { 'Content-Type': 'application/json' } }).then(() => {
-        setError(false)
-        reset()
+        setError(false);
+        reset();
+        refetch();
       });
     }catch{
       setError(true);

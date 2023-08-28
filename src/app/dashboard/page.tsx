@@ -22,6 +22,12 @@ export interface User{
   email: string;
 }
 
+export interface Representante{
+  id: number;
+  name: string;
+  email: string;
+}
+
 export default function Dashboard(){
   const role = Cookies.get("role");
 
@@ -30,17 +36,10 @@ export default function Dashboard(){
     return response.data;
   });
 
-  const { data: representantes, refetch: refetchRepresentantes } = useQuery<User[]>(['representantes'], async () => {
+  const { data: representantes, refetch: refetchRepresentantes } = useQuery<Representante[]>(['representantes'], async () => {
     const response = await api.get('/admin/representantes/all');
     return response.data;
   });
-
-  const { data: todos, refetch: refetchTodos } = useQuery<User[]>(['todos'], async () => {
-    const response = await api.get('/to-dos/without-user');
-    return response.data;
-  });
-
-  console.log(todos);
   
 
   return(
@@ -80,15 +79,17 @@ export default function Dashboard(){
             <div className="w-full flex flex-col bg-white shadow-lg rounded-lg gap-4 p-6">
               <div className="w-full flex justify-between items-center gap-8">
                 <strong className="text-xl text-black font-bold">Grupos</strong>
-                <ButtonNewGroup />
+                <ButtonNewGroup refetch={refetch} />
               </div>
-              <div className="w-full grid grid-cols-1 gap-8">
-                <GroupsBoxMobile />
+              <div className="w-full grid grid-cols-1 lg:grid-cols-4 gap-8">
+                {representantes !== undefined && representantes.map(item => (
+                  <GroupsBoxMobile key={item.id} id={item.id} email={item.email} name={item.name} refetch={refetch} />
+                ))}
               </div>
           </div>
           )}
-          {role === 'Admin' ? (
-            <Tasks />
+          {role === 'Admin' && representantes !== undefined ? (
+            <Tasks representantes={representantes} />
           ) : role === 'Representante' ? (
             <TodoGroups />
           ) : <></>}
