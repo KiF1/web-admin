@@ -1,11 +1,20 @@
+'use client'
+
+import Cookies from "js-cookie";
 import { Home, LogOut } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Props{
   title: string;
 }
 
 export function HeaderDashBoard({ title }: Props){
+  const router = useRouter();
+
+  function signOut(){
+    Cookies.remove('token_role');
+    router.push('/')
+  }
 
   return(
     <div className="w-full flex items-center justify-between gap-8">
@@ -16,7 +25,7 @@ export function HeaderDashBoard({ title }: Props){
         </div>
         <strong className="text-xl font-bold text-black">{title}</strong>
       </div>
-      <Link href="/api/logout" type='submit' className='w-fit px-4 py-2 bg-black text-white rounded-lg text-lg font-bold font-serif text-center'><LogOut className='w-6 h-6' color='white' /></Link>
+      <button onClick={() => signOut()} className='w-fit px-4 py-2 bg-black text-white rounded-lg text-lg font-bold font-serif text-center'><LogOut className='w-6 h-6' color='white' /></button>
     </div>
   )
 }
