@@ -1,13 +1,53 @@
 'use client'
 
+import { api } from '@/lib/api';
+import { zodResolver } from '@hookform/resolvers/zod';
 import * as Dialog from '@radix-ui/react-dialog';
-import { UserPlus, X } from 'lucide-react';
+import { User , X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-export function ButtonNewUser(){
+interface Props {
+  refetch : () => void;
+}
+
+const validationUserFormSchema = z.object({
+  name: z.string().min(1, { message: 'Informe um nome válido' }),
+  email: z.string().min(1, { message: 'Informe um email válido' }).email(),
+  password: z.string().min(6, "Informe a Senha correta"),
+});
+
+type validationFormData = z.infer<typeof validationUserFormSchema>
+
+export function ButtonNewUser({ refetch }: Props){
+  const [error, setError] = useState<boolean | null>(null);
+  const { handleSubmit, register, reset, formState: { isSubmitting, errors } } = useForm<validationFormData>({
+    resolver: zodResolver(validationUserFormSchema)
+  });
+
+  async function handleUser(data: validationFormData){
+    try {
+      await api.post('/representante/create-user', data, { headers: { 'Content-Type': 'application/json' } }).then(() => {
+        setError(false)
+        reset();
+        refetch();
+      });
+    }catch{
+      setError(true);
+    }
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      setError(null)
+    }, 5000)
+  }, [error])
+
   return(
       <Dialog.Root>
         <Dialog.Trigger asChild>
-          <button type='submit' className='w-fit px-4 py-2 bg-black text-white rounded-lg text-lg font-bold font-serif text-center'><UserPlus className='w-6 h-6' color='white' /></button>
+          <button type='submit' className='w-fit px-4 py-2 bg-black text-white rounded-lg text-lg font-bold font-serif text-center'><User className='w-6 h-6' color='white' /></button>
         </Dialog.Trigger>
         <Dialog.Portal className='w-full h-screen'>
           <Dialog.Overlay className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
@@ -18,19 +58,21 @@ export function ButtonNewUser(){
                     <X className="w-12 h-12 right-4 cursor-pointer" color='#000000' aria-label="Close"/>
                 </Dialog.Close>
               </div>
-            <form className='flex flex-col gap-4'>
+            <form onSubmit={handleSubmit(handleUser)} className='flex flex-col gap-4'>
               <div className="w-full flex flex-col gap-2">
-                <input  type='email' placeholder='E-mail' className='w-full px-2 py-2 text-black text-sm font-normal rounded-lg border-2 border-grayBorder focus:outline-black'  />
-                {/* {errors.email && <span className="text-sm text-black font-normal">{errors.email.message}</span>} */}
+                <input {...register('name')}  type='text' placeholder='Nome' className='w-full px-2 py-2 text-black text-sm font-normal rounded-lg border-2 border-grayBorder focus:outline-black'  />
+                {errors.name && <span className="text-sm text-black font-normal">{errors.name.message}</span>}
               </div>
               <div className="w-full flex flex-col gap-2">
-                <input type='password' placeholder='Senha' className='w-full px-2 py-2 text-black text-sm font-normal rounded-lg border-2 border-grayBorder focus:outline-black'  />
-                {/* {errors.password && <span className="text-sm text-black font-normal">{errors.password.message}</span>} */}
+                <input {...register('email')} type='email' placeholder='E-mail' className='w-full px-2 py-2 text-black text-sm font-normal rounded-lg border-2 border-grayBorder focus:outline-black'  />
+                {errors.email && <span className="text-sm text-black font-normal">{errors.email.message}</span>}
               </div>
               <div className="w-full flex flex-col gap-2">
-                <input type='password' placeholder='Confirmar Senha' className='w-full px-2 py-2 text-black text-sm font-normal rounded-lg border-2 border-grayBorder focus:outline-black'  />
-                {/* {errors.password && <span className="text-sm text-black font-normal">{errors.password.message}</span>} */}
+                <input {...register('password')} type='password' placeholder='Senha' className='w-full px-2 py-2 text-black text-sm font-normal rounded-lg border-2 border-grayBorder focus:outline-black'  />
+                {errors.password && <span className="text-sm text-black font-normal">{errors.password.message}</span>}
               </div>
+              {error ? <span className="w-full text-sm text-black font-normal">Erro ao realizar atividade</span> : error === false ? <span className="w-full text-sm text-black font-normal">Sucesso ao realizar atividade</span> : <></>}
+              <button disabled={isSubmitting} data-disabled={isSubmitting} type='submit' className='w-full px-8 py-3 bg-black text-white rounded-lg text-lg font-bold font-serif text-center data-[disabled=true]:cursor-not-allowed data-[disabled=true]:bg-black'>Criar</button>
             </form>
           </Dialog.Content>
         </Dialog.Portal>

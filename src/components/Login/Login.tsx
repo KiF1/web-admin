@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 const validationLoginFormSchema = z.object({
   email: z.string().min(1, { message: 'Informe um email válido' }).email(),
   password: z.string().min(6, "Informe a Senha correta"),
-});
+}); 
 
 type validationFormData = z.infer<typeof validationLoginFormSchema>
 
@@ -21,12 +21,13 @@ export function Login(){
   const { handleSubmit, register, formState: { isSubmitting, errors } } = useForm<validationFormData>({
     resolver: zodResolver(validationLoginFormSchema)
   });
-  const router = useRouter()
+  const router = useRouter();
 
   async function handleLogin(data: validationFormData){
     try {
       await api.post('/login', data, { headers: { 'Content-Type': 'application/json' } }).then(response => {
-        Cookies.set('token', response.data.access_token, { expires: 10, path: '/' })
+        Cookies.set('token', response.data.access_token , { expires: 5, path: '/' })
+        Cookies.set('role', response.data.role , { expires: 5, path: '/' })
         api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
         router.push('/dashboard');
       });
