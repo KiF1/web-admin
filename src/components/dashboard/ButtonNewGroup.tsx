@@ -53,7 +53,7 @@ export function ButtonNewGroup({ refetch }: Props){
           <Dialog.Overlay className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
           <Dialog.Content className="w-[85%] md:w-[65%] lg:w-[30%] h-fit p-8 rounded-md top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-white fixed z-[100] focus-visible:outline-0 transition-all">
               <div className='w-full flex justify-between items-center mb-8'>
-                <h1 className='text-2xl text-center flex-1 font-sans font-bold text-black'>Criar Grupo</h1>
+                <h1 className='text-2xl text-center flex-1 font-sans font-bold text-black'>Criar Representante</h1>
                 <Dialog.Close asChild>
                     <X className="w-12 h-12 right-4 cursor-pointer" color='#000000' aria-label="Close"/>
                 </Dialog.Close>

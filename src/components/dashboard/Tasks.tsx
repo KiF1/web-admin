@@ -4,12 +4,12 @@ import { FolderUp, Pencil, Trash } from "lucide-react";
 import { ButtonNewTodo } from "./ButtonNewTodo";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
-import { Representante } from "@/app/dashboard/page";
+import { RepresentanteStatistics } from "@/app/dashboard/page";
 import { TodoWithoutRepresentante } from "./TodoWithoutRepresentante";
 import { useEffect, useState } from "react";
 
 interface Props{
-  representantes: Representante[]
+  representantes: RepresentanteStatistics[]
 }
 
 export interface Todo{
@@ -49,6 +49,7 @@ export function Tasks({ representantes }: Props){
     useEffect(() => {
       setTimeout(() => {
         setError(null)
+        setSelectedFile(null)
       }, 5000)
     }, [error])
 

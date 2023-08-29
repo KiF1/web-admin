@@ -5,6 +5,7 @@ import { ButtonNewGroup } from "@/components/dashboard/ButtonNewGroup";
 import { ButtonNewPass } from "@/components/dashboard/ButtonNewPass";
 import { ButtonNewUser } from "@/components/dashboard/ButtonNewUser";
 import { GroupsBoxMobile } from "@/components/dashboard/GroupsBoxMobile";
+import { TableGroups } from "@/components/dashboard/TableGroups";
 import { Tasks } from "@/components/dashboard/Tasks";
 import { TodoGroups } from "@/components/dashboard/TodosGroups";
 import { UsersBoxMobile } from "@/components/dashboard/UsersBoxMobile";
@@ -19,10 +20,12 @@ export interface User{
   email: string;
 }
 
-export interface Representante{
-  id: number;
-  name: string;
-  email: string;
+export interface RepresentanteStatistics{
+  representante_id: number;
+  representante_name: string;
+  total_greens: string;
+  total_reds: string;
+  value_of_greens: string
 }
 
 export default function Dashboard(){
@@ -35,11 +38,27 @@ export default function Dashboard(){
     return response.data;
   });
 
-  const { data: representantes, refetch: refetchRepresentantes } = useQuery<Representante[]>(['representantes'], async () => {
+  const { data: representantes, refetch: refetchRepresentantes } = useQuery(['representantes'], async () => {
     const response = await api.get('/admin/representantes/all');
     return response.data;
   });
-  
+
+  const { data: statisticsRepresentantes, refetch: refetchstatisticsRepresentantes } = useQuery<RepresentanteStatistics[]>(['statisticsRepresentantes'], async () => {
+    const response = await api.get('/admin/representantes');
+    return response.data;
+  });
+
+  const { data: statisticsUsers, refetch: refetchstatisticsUsers } = useQuery(['statisticsUsers'], async () => {
+    const response = await api.get('/users');
+    return response.data;
+  });
+
+  const { data: topTenRed, refetch: refetchtopTenRed } = useQuery(['topTenRed'], async () => {
+    const response = await api.get('/to-dos/top10red');
+    return response.data;
+  });
+
+  console.log(statisticsUsers)
 
   return(
     <div className="w-full grid grid-cols-1 gap-8 lg:h-screen">
@@ -77,18 +96,18 @@ export default function Dashboard(){
           {role === 'Admin' && (
             <div className="w-full flex flex-col bg-white shadow-lg rounded-lg gap-4 p-6">
               <div className="w-full flex justify-between items-center gap-8">
-                <strong className="text-xl text-black font-bold">Grupos</strong>
-                <ButtonNewGroup refetch={refetchRepresentantes} />
+                <strong className="text-xl text-black font-bold">Representantes</strong>
+                <ButtonNewGroup refetch={refetchstatisticsRepresentantes} />
               </div>
-              <div className="w-full grid grid-cols-1 lg:grid-cols-4 gap-8">
-                {representantes !== undefined && representantes.map(item => (
-                  <GroupsBoxMobile key={item.id} id={item.id} email={item.email} name={item.name} refetch={refetch} />
+              <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {statisticsRepresentantes !== undefined && statisticsRepresentantes.map(item => (
+                  <GroupsBoxMobile key={item.representante_id} representante={item}  refetchStatistics={refetchstatisticsRepresentantes} />
                 ))}
               </div>
           </div>
           )}
-          {role === 'Admin' && representantes !== undefined ? (
-            <Tasks representantes={representantes} />
+          {role === 'Admin' && statisticsRepresentantes !== undefined ? (
+            <Tasks representantes={statisticsRepresentantes} />
           ) : role === 'Representante' ? (
             <TodoGroups />
           ) : <></>}
