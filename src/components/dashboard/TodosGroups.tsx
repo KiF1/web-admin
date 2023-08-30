@@ -4,9 +4,13 @@ import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { TodoWithoutUser } from "./TodoWithoutUser";
 import { Todo } from "./Tasks";
-import { token } from "@/app/dashboard/page";
+import Cookies from "js-cookie";
 
 export function TodoGroups(){
+  const tokenRole = Cookies.get('token_role');
+  const value = tokenRole?.split('|');
+  const token = value !== undefined ? value[0] : '';
+  
   const { data: todosWithoutUser, refetch: refetchTodosWithoutUser } = useQuery<Todo[]>(['todosWithoutUser'], async () => {
     const responseMe = await api.post('/me', { headers: { 'Authorization': `Bearer ${token}` } });
     const response = await api.get(`/to-dos/without-user/${responseMe.data.id}`, { headers: { 'Authorization': `Bearer ${token}` } });

@@ -4,9 +4,10 @@ import { FolderUp } from "lucide-react";
 import { ButtonNewTodo } from "./ButtonNewTodo";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
-import { Representante, token } from "@/app/dashboard/page";
+import { Representante } from "@/app/dashboard/page";
 import { TodoWithoutRepresentante } from "./TodoWithoutRepresentante";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 interface Props{
   representantes: Representante[]
@@ -20,6 +21,10 @@ export interface Todo{
 }
 
 export function Tasks({ representantes }: Props){
+  const tokenRole = Cookies.get('token_role');
+  const value = tokenRole?.split('|');
+  const token = value !== undefined ? value[0] : '';
+  
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<boolean | null>(null);
 

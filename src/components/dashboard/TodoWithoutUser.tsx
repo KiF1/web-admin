@@ -1,8 +1,10 @@
+'use client'
+
 import { Todo } from "./Tasks"
 import { useEffect, useState } from "react"
 import { api } from "@/lib/api"
 import { useQuery } from "@tanstack/react-query"
-import { token } from "@/app/dashboard/page";
+import Cookies from "js-cookie"
 
 export interface User{
   id: number;
@@ -16,6 +18,10 @@ interface Props{
 }
 
 export function TodoWithoutUser({ todo, refetch }: Props){
+  const tokenRole = Cookies.get('token_role');
+  const value = tokenRole?.split('|');
+  const token = value !== undefined ? value[0] : '';
+  
   const [user, setUser] = useState<string | null>(null);
 
   const { data } = useQuery<User[]>(['users'], async () => {

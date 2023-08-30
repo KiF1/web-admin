@@ -2,7 +2,8 @@
 
 import { Trash } from "lucide-react";
 import { api } from "@/lib/api";
-import { RepresentanteStatistics, token } from "@/app/dashboard/page";
+import { RepresentanteStatistics } from "@/app/dashboard/page";
+import Cookies from "js-cookie";
 
 interface Props{
   representante: RepresentanteStatistics
@@ -12,6 +13,10 @@ interface Props{
 export function GroupsBoxMobile({ representante, refetchStatistics }: Props){
 
   async function deleteUser(id: number){
+    const tokenRole = Cookies.get('token_role');
+    const value = tokenRole?.split('|');
+    const token = value !== undefined ? value[0] : '';
+
     await api.delete(`/admin/representantes/${id}`, { headers: { 
       'Content-Type': 'application/json', 
       'Authorization': `Bearer ${token}`  

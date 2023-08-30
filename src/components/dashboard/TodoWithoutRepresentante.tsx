@@ -1,7 +1,10 @@
-import { Representante, token } from "@/app/dashboard/page"
+'use client'
+
+import { Representante } from "@/app/dashboard/page"
 import { Todo } from "./Tasks"
 import { useEffect, useState } from "react"
 import { api } from "@/lib/api"
+import Cookies from "js-cookie"
 
 interface Props{
   representantes: Representante[]
@@ -10,6 +13,10 @@ interface Props{
 }
 
 export function TodoWithoutRepresentante({ representantes, todo, refetch }: Props){
+  const tokenRole = Cookies.get('token_role');
+  const value = tokenRole?.split('|');
+  const token = value !== undefined ? value[0] : '';
+  
   const [representante, setRepresentante] = useState<string | null>(null);
 
   useEffect(() => {

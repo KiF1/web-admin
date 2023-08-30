@@ -1,9 +1,9 @@
 'use client'
 
-import { token } from '@/app/dashboard/page';
 import { api } from '@/lib/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Dialog from '@radix-ui/react-dialog';
+import Cookies from 'js-cookie';
 import { BookKey, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -16,6 +16,10 @@ const validationPassCodeFormSchema = z.object({
 type validationFormData = z.infer<typeof validationPassCodeFormSchema>
 
 export function ButtonNewPass(){
+  const tokenRole = Cookies.get('token_role');
+  const value = tokenRole?.split('|');
+  const token = value !== undefined ? value[0] : '';
+
   const [error, setError] = useState<boolean | null>(null);
   const { handleSubmit, register, reset, formState: { isSubmitting, errors } } = useForm<validationFormData>({
     resolver: zodResolver(validationPassCodeFormSchema)

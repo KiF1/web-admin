@@ -42,11 +42,10 @@ interface TopRed{
   total_red:  number
 }
 
-const tokenRole = Cookies.get('token_role');
-const value = tokenRole?.split('|');
-export const token = value !== undefined ? value[0] : ''
-
 export default function Dashboard(){
+  const tokenRole = Cookies.get('token_role');
+  const value = tokenRole?.split('|');
+  const token = value !== undefined ? value[0] : '';
   const role = value !== undefined ? value[1] : ''
 
   const { refetch } = useQuery<User[]>(['users'], async () => {
