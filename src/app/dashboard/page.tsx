@@ -42,39 +42,41 @@ interface TopRed{
   total_red:  number
 }
 
+const tokenRole = Cookies.get('token_role');
+const value = tokenRole?.split('|');
+export const token = value !== undefined ? value[0] : ''
+
 export default function Dashboard(){
-  const tokenRole = Cookies.get('token_role');
-  const value = tokenRole?.split('|');
   const role = value !== undefined ? value[1] : ''
 
   const { refetch } = useQuery<User[]>(['users'], async () => {
-    const responseMe = await api.post('/me');
-    const response = await api.get(`/users/representante/${responseMe.data.id}`);
+    const responseMe = await api.post('/me', { headers: { 'Authorization': `Bearer ${token}` } });
+    const response = await api.get(`/users/representante/${responseMe.data.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });
 
   const { data: representantes } = useQuery<Representante[]>(['representantes'], async () => {
-    const response = await api.get('/admin/representantes/all');
+    const response = await api.get('/admin/representantes/all', { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });
 
   const { data: statisticsRepresentantes, refetch: refetchstatisticsRepresentantes } = useQuery<RepresentanteStatistics[]>(['statisticsRepresentantes'], async () => {
-    const response = await api.get('/admin/representantes');
+    const response = await api.get('/admin/representantes', { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });
 
   const { data: statisticsUsers } = useQuery<RepresentanteStatistics[]>(['statisticsUsers'], async () => {
-    const response = await api.get('/users');
+    const response = await api.get('/users', { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });
 
   const { data: topTenGreen } = useQuery<TopGreen[]>(['topTenGreen'], async () => {
-    const response = await api.get('/to-dos/top10green');
+    const response = await api.get('/to-dos/top10green', { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });
 
   const { data: topTenRed } = useQuery<TopRed[]>(['topTenRed'], async () => {
-    const response = await api.get('/to-dos/top10red');
+    const response = await api.get('/to-dos/top10red', { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });
 

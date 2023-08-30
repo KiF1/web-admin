@@ -1,4 +1,4 @@
-import { RepresentanteStatistics } from "@/app/dashboard/page";
+import { RepresentanteStatistics, token } from "@/app/dashboard/page";
 import { api } from "@/lib/api";
 import { Trash } from "lucide-react";
 
@@ -10,7 +10,10 @@ interface Props{
 export function UsersBoxMobile({ user, refetch }: Props){
 
   async function deleteUser(id: number){
-    await api.delete(`/users/${id}`, { headers: { 'Content-Type': 'application/json' } }).then(() => refetch());
+    await api.delete(`/users/${id}`, { headers: { 
+      'Content-Type': 'application/json', 
+      'Authorization': `Bearer ${token}`  
+    }}).then(() => refetch());
   }
 
   return(

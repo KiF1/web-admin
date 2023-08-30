@@ -1,10 +1,10 @@
 'use client'
 
-import { FolderUp, Pencil, Trash } from "lucide-react";
+import { FolderUp } from "lucide-react";
 import { ButtonNewTodo } from "./ButtonNewTodo";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
-import { Representante } from "@/app/dashboard/page";
+import { Representante, token } from "@/app/dashboard/page";
 import { TodoWithoutRepresentante } from "./TodoWithoutRepresentante";
 import { useEffect, useState } from "react";
 
@@ -28,7 +28,7 @@ export function Tasks({ representantes }: Props){
   };
 
   const { data: todosWithoutRepresentantes, refetch: refetchTodosWithoutRepresentantes } = useQuery<Todo[]>(['todosWithoutRepresentantes'], async () => {
-    const response = await api.get('/to-dos/without-representante');
+    const response = await api.get('/to-dos/without-representante', { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });
 
@@ -37,7 +37,7 @@ export function Tasks({ representantes }: Props){
       const formData = new FormData();
       formData.append('txt_file', selectedFile);
 
-      api.post('admin/save-todo-file', formData)
+      api.post('admin/save-todo-file', formData, { headers: { 'Authorization': `Bearer ${token}` } })
         .then(() => {
           setError(false)
           refetchTodosWithoutRepresentantes()
@@ -72,8 +72,8 @@ export function Tasks({ representantes }: Props){
             </div>
           </div>
         <div className="w-full grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-8">
-          {todosWithoutRepresentantes !== undefined && todosWithoutRepresentantes.map(item => (
-            <TodoWithoutRepresentante key={item.id} todo={item} representantes={representantes} refetch={refetchTodosWithoutRepresentantes} />
+          {todosWithoutRepresentantes !== undefined && todosWithoutRepresentantes.map((item, index) => (
+            <TodoWithoutRepresentante key={index} todo={item} representantes={representantes} refetch={refetchTodosWithoutRepresentantes} />
           ))}
         </div>
     </div>

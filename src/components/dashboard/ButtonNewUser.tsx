@@ -1,5 +1,6 @@
 'use client'
 
+import { token } from '@/app/dashboard/page';
 import { api } from '@/lib/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -28,7 +29,10 @@ export function ButtonNewUser({ refetch }: Props){
 
   async function handleUser(data: validationFormData){
     try {
-      await api.post('/representante/create-user', data, { headers: { 'Content-Type': 'application/json' } }).then(() => {
+      await api.post('/representante/create-user', data, { headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${token}`  
+      }}).then(() => {
         setError(false)
         reset();
         refetch();

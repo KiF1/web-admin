@@ -2,6 +2,7 @@ import { Todo } from "./Tasks"
 import { useEffect, useState } from "react"
 import { api } from "@/lib/api"
 import { useQuery } from "@tanstack/react-query"
+import { token } from "@/app/dashboard/page";
 
 export interface User{
   id: number;
@@ -18,14 +19,17 @@ export function TodoWithoutUser({ todo, refetch }: Props){
   const [user, setUser] = useState<string | null>(null);
 
   const { data } = useQuery<User[]>(['users'], async () => {
-    const responseMe = await api.post('/me');
-    const response = await api.get(`/users/representante/${responseMe.data.id}`);
+    const responseMe = await api.post('/me', { headers: { 'Authorization': `Bearer ${token}` } });
+    const response = await api.get(`/users/representante/${responseMe.data.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });
 
   useEffect(() => {
      if(user !== null){
-      api.post(`/representante/link-todo/${todo.id}/${user}`, { headers: { 'Content-Type': 'application/json' } }).then(() => refetch())
+      api.post(`/representante/link-todo/${todo.id}/${user}`, { headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${token}`  
+      }}).then(() => refetch())
      }
   }, [user]);
 

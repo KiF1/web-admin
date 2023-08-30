@@ -1,6 +1,6 @@
 'use client'
 
-import { Representante } from '@/app/dashboard/page';
+import { Representante, token } from '@/app/dashboard/page';
 import { api } from '@/lib/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -30,7 +30,7 @@ export function ButtonNewTodo({ refetch }: Props){
   });
 
   const { data } = useQuery<Representante[]>(['representantes'], async () => {
-    const response = await api.get('/admin/representantes/all');
+    const response = await api.get('/admin/representantes/all', { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });
 

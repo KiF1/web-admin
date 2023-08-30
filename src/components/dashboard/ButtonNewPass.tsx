@@ -1,5 +1,6 @@
 'use client'
 
+import { token } from '@/app/dashboard/page';
 import { api } from '@/lib/api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Dialog from '@radix-ui/react-dialog';
@@ -22,7 +23,10 @@ export function ButtonNewPass(){
 
   async function handlePassCode(data: validationFormData){
     try {
-      await api.post('/admin/create-code-pass', data, { headers: { 'Content-Type': 'application/json' } }).then(() =>{
+      await api.post('/admin/create-code-pass', data, { headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${token}`  
+      }}).then(() =>{
         setError(false)
         reset()
       });

@@ -1,4 +1,4 @@
-import { Representante } from "@/app/dashboard/page"
+import { Representante, token } from "@/app/dashboard/page"
 import { Todo } from "./Tasks"
 import { useEffect, useState } from "react"
 import { api } from "@/lib/api"
@@ -14,7 +14,10 @@ export function TodoWithoutRepresentante({ representantes, todo, refetch }: Prop
 
   useEffect(() => {
      if(representante !== null){
-      api.post(`/admin/representantes/link-todo/${representante}/${todo.id}`, { headers: { 'Content-Type': 'application/json' } }).then(() => refetch())
+      api.post(`/admin/representantes/link-todo/${representante}/${todo.id}`, { headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${token}`  
+      }}).then(() => refetch())
      }
   }, [representante]);
 
