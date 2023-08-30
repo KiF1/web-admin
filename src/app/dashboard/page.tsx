@@ -27,6 +27,15 @@ export interface RepresentanteStatistics{
   value_of_greens: string
 }
 
+export interface UserStatistics{
+  id: number;
+  representante_id: number;
+  representante_name: string;
+  total_greens: string;
+  total_reds: string;
+  value_of_greens: string
+}
+
 export interface Representante{
   id: number;
   name: string;
@@ -79,7 +88,7 @@ export default function Dashboard(){
     return response.data;
   });
 
-  const { data: statisticsUsers } = useQuery<RepresentanteStatistics[]>(['statisticsUsers'], async () => {
+  const { data: statisticsUsers } = useQuery<UserStatistics[]>(['statisticsUsers'], async () => {
     const response = await api.get('/users', { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });

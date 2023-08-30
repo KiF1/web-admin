@@ -67,11 +67,7 @@ export function BoxStatistics({ role, statistics }: Props){
             <UserX2 color="#ffff" />
           </div>
           <div className="flex flex-col items-end">
-            {role === 'Admin' ? (
-              <span className="text-sm text-gray-400 font-normal">To-Dos Sem Representante vinculado</span>
-            ) : (
-              <span className="text-sm text-gray-400 font-normal">To-Dos Sem Usuário vinculado</span>
-            )}
+            <span className="text-sm text-gray-400 font-normal">To-Dos Sem Status</span>
             <strong className="text-3xl text-black font-bold">{statistics.total_without_status}</strong>
           </div>
         </div>

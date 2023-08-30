@@ -3,32 +3,21 @@
 import { Todo } from "./Tasks"
 import { useEffect, useState } from "react"
 import { api } from "@/lib/api"
-import { useQuery } from "@tanstack/react-query"
 import Cookies from "js-cookie"
-
-export interface User{
-  id: number;
-  name: string;
-  email: string;
-}
+import { User } from "./TodosGroups"
 
 interface Props{
   todo: Todo
+  users: User[]
   refetch: () => void;
 }
 
-export function TodoWithoutUser({ todo, refetch }: Props){
+export function TodoWithoutUser({ todo, refetch, users }: Props){
   const tokenRole = Cookies.get('token_role');
   const value = tokenRole?.split('|');
   const token = value !== undefined ? value[0] : '';
   
   const [user, setUser] = useState<string | null>(null);
-
-  const { data } = useQuery<User[]>(['users'], async () => {
-    const responseMe = await api.post('/me', { headers: { 'Authorization': `Bearer ${token}` } });
-    const response = await api.get(`/users/representante/${responseMe.data.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
-    return response.data;
-  });
 
   useEffect(() => {
      if(user !== null){
@@ -46,7 +35,7 @@ export function TodoWithoutUser({ todo, refetch }: Props){
         <span className="text-lg font-bold">R$ {todo.price}</span>
         <select onChange={(e) => setUser(e.target.value)} className='w-full bg-grayBack text-black text-sm px-4 py-2 rounded-lg'>
             <option value="">Escolha um user</option>
-            {data !== undefined && data.map(item => (
+            {users.map(item => (
               <option value={item.id}>{item.name}</option>
             ))}
         </select>

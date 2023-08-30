@@ -1,12 +1,12 @@
 'use client'
 
-import { RepresentanteStatistics } from "@/app/dashboard/page";
+import { UserStatistics } from "@/app/dashboard/page";
 import { api } from "@/lib/api";
 import Cookies from "js-cookie";
 import { Trash } from "lucide-react";
 
 interface Props{
-  user: RepresentanteStatistics
+  user: UserStatistics
   refetch: () => void;
 }
 
@@ -44,7 +44,7 @@ export function UsersBoxMobile({ user, refetch }: Props){
         <span className="text-lg text-black font-normal">R$ {user.value_of_greens}</span>
       </div>
       <div className="w-full">
-        <button onClick={() => deleteUser(user.representante_id)} type='submit' className='w-full px-4 py-2 bg-black text-white rounded-lg text-lg font-bold font-serif text-center'>
+        <button onClick={() => deleteUser(user.id)} type='submit' className='w-full px-4 py-2 bg-black text-white rounded-lg text-lg font-bold font-serif text-center'>
           <Trash className='w-6 h-6 m-auto'  color='white' />
         </button>
       </div>

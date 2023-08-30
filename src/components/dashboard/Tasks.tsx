@@ -26,6 +26,7 @@ export function Tasks({ representantes }: Props){
   const token = value !== undefined ? value[0] : '';
   
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [representante, setRepresentante] = useState<string | null>(null);
   const [error, setError] = useState<boolean | null>(null);
 
   const handleFileChange = (event: any) => {
@@ -42,7 +43,7 @@ export function Tasks({ representantes }: Props){
       const formData = new FormData();
       formData.append('txt_file', selectedFile);
 
-      api.post('admin/save-todo-file', formData, { headers: { 'Authorization': `Bearer ${token}` } })
+      api.post(`admin/save-todo-file/${representante}`, formData, { headers: { 'Authorization': `Bearer ${token}` } })
         .then(() => {
           setError(false)
           refetchTodosWithoutRepresentantes()
@@ -72,7 +73,15 @@ export function Tasks({ representantes }: Props){
                 Upload Lista
               </label>
               {selectedFile && <span className="w-full text-sm text-black font-normal">Arquivo selecionado: {selectedFile.name}</span>}
-              {selectedFile && <button onClick={handleUpload} className="w-full p-4 bg-black text-white rounded-md text-center">Enviar Arquivo</button>}
+              {selectedFile && (
+                <select onChange={(e) => setRepresentante(e.target.value)} className='w-full bg-grayBack text-black text-sm px-4 py-2 rounded-lg'>
+                    <option value="">Escolha um Representante</option>
+                    {representantes !== undefined && representantes.map(item => (
+                      <option value={item.id}>{item.name}</option>
+                    ))}
+                </select>
+              )}
+              {selectedFile && <button disabled={!representante} data-disabled={!representante} onClick={handleUpload} className="w-full p-4 bg-black text-white rounded-md text-center data-[disabled=true]:cursor-not-allowed">Enviar Arquivo</button>}
               {error ? <span className="w-full text-sm text-black font-normal">Erro ao realizar atividade</span> : error === false ? <span className="w-full text-sm text-black font-normal">Sucesso ao realizar atividade</span> : <></>}
             </div>
           </div>
