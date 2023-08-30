@@ -1,6 +1,7 @@
 'use client'
 
 import { HeaderDashBoard } from "@/components/Header/HeaderDashboard";
+import { BoxStatistics } from "@/components/dashboard/BoxStatistics";
 import { ButtonNewGroup } from "@/components/dashboard/ButtonNewGroup";
 import { ButtonNewPass } from "@/components/dashboard/ButtonNewPass";
 import { ButtonNewUser } from "@/components/dashboard/ButtonNewUser";
@@ -12,6 +13,7 @@ import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import { FileLock2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export interface User{
   id: number;
@@ -39,22 +41,37 @@ interface TopGreen{
 
 interface TopRed{
   name: string;
-  total_red:  number
+  total_reds:  number
 }
 
+export interface Statistics {
+  total_canceled: string; 
+  total_green: number;  
+  total_red: number; 
+  total_value: string; 
+  total_without_status: number; 
+};
+
+
 export default function Dashboard(){
+  const [errorMe, setErroMe] = useState<boolean>(false);
+
   const tokenRole = Cookies.get('token_role');
   const value = tokenRole?.split('|');
   const token = value !== undefined ? value[0] : '';
   const role = value !== undefined ? value[1] : ''
 
   const { refetch } = useQuery<User[]>(['users'], async () => {
-    const responseMe = await api.post('/me', { headers: { 'Authorization': `Bearer ${token}` } });
-    const response = await api.get(`/users/representante/${responseMe.data.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
-    return response.data;
+    try {
+      const responseMe = await api.post('/me', { headers: { 'Authorization': `Bearer ${token}` } });
+      const response = await api.get(`/users/representante/${responseMe.data.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+      return response.data;
+    } catch {
+      setErroMe(true)
+    }
   });
 
-  const { data: representantes } = useQuery<Representante[]>(['representantes'], async () => {
+  const { data: representantes, refetch: refetchRepresentantes } = useQuery<Representante[]>(['representantes'], async () => {
     const response = await api.get('/admin/representantes/all', { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });
@@ -79,47 +96,52 @@ export default function Dashboard(){
     return response.data;
   });
 
+  const { data: statistics } = useQuery<Statistics>(['statistics'], async () => {
+    const response = await api.get('/to-dos/concluded-finalized', { headers: { 'Authorization': `Bearer ${token}` } });
+    return response.data;
+  });
+
+  useEffect(() => {
+    if(errorMe){
+      window.location.reload(); 
+    }
+}, [errorMe])
+
   return(
     <div className="w-full grid grid-cols-1 gap-8 lg:h-screen">
       <div className="h-full flex relative lg:overflow-y-scroll py-4">
         <div className="w-full absolute flex flex-col gap-12 p-4 lg:pr-8 pb-12">
           <HeaderDashBoard title="Dashboard" />
-          {role === 'Admin' && (
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <div className="w-full bg-white rounded-lg shadow-lg flex flex-col gap-4 p-6">
-                <div className="w-full flex justify-between items-center  pb-2">
-                  <div className="px-5 py-4 bg-black rounded-lg relative top-[-3rem] flex justify-center items-center">
-                    <FileLock2 color="#ffff" />
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <span className="text-sm text-gray-400 font-normal">Alterar Pass-Code</span>
-                    <ButtonNewPass />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          {role === 'Representante' && (
+          {statistics !== undefined && <BoxStatistics role={role} statistics={statistics} />}
+          {role === 'Representante' && statisticsUsers !== undefined && (
             <div className="w-full flex flex-col bg-white shadow-lg rounded-lg gap-4 p-6">
               <div className="w-full flex justify-between items-center gap-8">
-                <strong className="text-xl text-black font-bold">Estatísticas dos Usuários</strong>
+                {statisticsUsers.length >= 1 ? (
+                  <strong className="text-xl text-black font-bold">Estatísticas dos Usuários</strong> 
+                ) : (
+                  <strong className="text-xl text-black font-bold">Adicione um Usuário</strong>
+                )}
                 <ButtonNewUser refetch={refetch} />
               </div>
-              <div className="w-full grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {statisticsUsers !== undefined && statisticsUsers.map(item => (
+              <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {statisticsUsers.map(item => (
                   <UsersBoxMobile key={item.representante_id} user={item} refetch={refetch} />
                 ))}
               </div>
             </div>
           )}
-          {role === 'Admin' && (
+          {role === 'Admin' && statisticsRepresentantes !== undefined &&  (
             <div className="w-full flex flex-col bg-white shadow-lg rounded-lg gap-4 p-6">
               <div className="w-full flex justify-between items-center gap-8">
-                <strong className="text-xl text-black font-bold">Estatísticas dos Representantes</strong>
-                <ButtonNewGroup refetch={refetchstatisticsRepresentantes} />
+                {statisticsRepresentantes.length >= 1 ? (
+                    <strong className="text-xl text-black font-bold">Estatísticas dos Representantes</strong> 
+                  ) : (
+                    <strong className="text-xl text-black font-bold">Adicione um Representante</strong>
+                  )}
+                <ButtonNewGroup refetch={refetchRepresentantes} />
               </div>
               <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {statisticsRepresentantes !== undefined && statisticsRepresentantes.map(item => (
+                {statisticsRepresentantes.map(item => (
                   <GroupsBoxMobile key={item.representante_id} representante={item}  refetchStatistics={refetchstatisticsRepresentantes} />
                 ))}
               </div>
@@ -158,7 +180,7 @@ export default function Dashboard(){
                   </div>
                   <div className="w-full">
                     <strong className="text-lg text-black font-bold relative float-left mr-2">To-dos Cancelados:</strong>
-                    <span className="text-lg text-black font-normal">{item.total_red}</span>
+                    <span className="text-lg text-black font-normal">{item.total_reds}</span>
                   </div>
                 </div>
               ))}

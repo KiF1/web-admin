@@ -20,7 +20,7 @@ export function TodoWithoutRepresentante({ representantes, todo, refetch }: Prop
   const [representante, setRepresentante] = useState<string | null>(null);
 
   useEffect(() => {
-     if(representante !== null){
+     if(representante !== null && representante !== ''){
       api.post(`/admin/representantes/link-todo/${representante}/${todo.id}`, { headers: { 
         'Content-Type': 'application/json', 
         'Authorization': `Bearer ${token}`  

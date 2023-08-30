@@ -1,40 +1,94 @@
 'use client'
 
-import { UserCheck2, UtensilsCrossed, Bike, PackageCheck, XCircle } from "lucide-react";
+import { CheckCheck, DollarSign, FileLock2, X } from "lucide-react"
+import { ButtonNewPass } from "./ButtonNewPass"
+import { Statistics } from "@/app/dashboard/page";
+
 
 interface Props{
-  name: string;
-  value: number;
-  icon: string;
-  currentTotal: number;
-  lastTotal: number;
+  role: string;
+  statistics: Statistics
 }
 
-export function BoxStatistics({ icon, name, value, currentTotal, lastTotal }: Props){
-  const percentageDifferenceBetweenFinishedTasksAndCancelledTasks = currentTotal !== 0 && lastTotal !== 0 ? Math.round((((currentTotal) - lastTotal) / lastTotal) * 100) : 0;
-  
+export function BoxStatistics({ role, statistics }: Props){
   return(
-    <div className="w-full bg-white rounded-lg shadow-lg flex flex-col gap-4 p-6">
-      <div className="w-full flex justify-between items-center border-b-2 border-b-gray-200 pb-2">
-        <div className="px-5 py-4 bg-black rounded-lg relative top-[-3rem] flex justify-center items-center">
-          { icon === 'UserCheck2' ? <UserCheck2 color="#ffff" />
-             : icon === 'UtensilsCrossed' ? <UtensilsCrossed color="#ffff" /> 
-             : icon === 'Bike' ? <Bike color="#ffff" />
-             : icon === 'PackageCheck' ? <PackageCheck color="#ffff" />
-             : <XCircle color="#ffff" />
-          }
+    <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+       <div className="w-full bg-white rounded-lg shadow-lg flex flex-col gap-4 p-6">
+        <div className="w-full flex justify-between items-center border-b-2 border-b-gray-200 pb-2">
+          <div className="px-5 py-4 bg-black rounded-lg relative top-[-3rem] flex justify-center items-center">
+            <DollarSign color="#ffff" />
+          </div>
+          <div className="flex flex-col items-end">
+            <span className="text-sm text-gray-400 font-normal">Total Finalizado</span>
+            <strong className="text-3xl text-black font-bold">{statistics.total_value}</strong>
+          </div>
         </div>
-        <div className="flex flex-col items-end">
-          <span className="text-sm text-gray-400 font-normal">{name}</span>
-          <strong className="text-3xl text-black font-bold">{value}</strong>
-        </div>
-      </div>
-      {percentageDifferenceBetweenFinishedTasksAndCancelledTasks > 0 && name !== 'Pedidos Aceitos' && name !== 'Pedidos Pendentes' ? (
-        <strong className="text-sm text-gray-400 font-normal"><span className="text-sm text-green-600 font-bold">+{percentageDifferenceBetweenFinishedTasksAndCancelledTasks}%</span> em comparação com a última semana</strong>
-      ) : percentageDifferenceBetweenFinishedTasksAndCancelledTasks < 0 && name !== 'Pedidos Aceitos' && name !== 'Pedidos Pendentes' ? (
-        <strong className="text-sm text-gray-400 font-normal"><span className="text-sm text-black font-bold">{percentageDifferenceBetweenFinishedTasksAndCancelledTasks}%</span> em comparação com a última semana</strong>
-      ) : (
         <strong className="text-sm text-gray-400 font-normal">Momento Atual</strong>
+      </div>
+       <div className="w-full bg-white rounded-lg shadow-lg flex flex-col gap-4 p-6">
+        <div className="w-full flex justify-between items-center border-b-2 border-b-gray-200 pb-2">
+          <div className="px-5 py-4 bg-black rounded-lg relative top-[-3rem] flex justify-center items-center">
+            <DollarSign color="#ffff" />
+          </div>
+          <div className="flex flex-col items-end">
+            <span className="text-sm text-gray-400 font-normal">Total Cancelado</span>
+            <strong className="text-3xl text-black font-bold">{statistics.total_canceled}</strong>
+          </div>
+        </div>
+        <strong className="text-sm text-gray-400 font-normal">Momento Atual</strong>
+      </div>
+       <div className="w-full bg-white rounded-lg shadow-lg flex flex-col gap-4 p-6">
+        <div className="w-full flex justify-between items-center border-b-2 border-b-gray-200 pb-2">
+          <div className="px-5 py-4 bg-black rounded-lg relative top-[-3rem] flex justify-center items-center">
+            <CheckCheck color="#ffff" />
+          </div>
+          <div className="flex flex-col items-end">
+            <span className="text-sm text-gray-400 font-normal">To-Dos Finalizados</span>
+            <strong className="text-3xl text-black font-bold">{statistics.total_green}</strong>
+          </div>
+        </div>
+        <strong className="text-sm text-gray-400 font-normal">Momento Atual</strong>
+      </div>
+       <div className="w-full bg-white rounded-lg shadow-lg flex flex-col gap-4 p-6">
+        <div className="w-full flex justify-between items-center border-b-2 border-b-gray-200 pb-2">
+          <div className="px-5 py-4 bg-black rounded-lg relative top-[-3rem] flex justify-center items-center">
+            <X color="#ffff" />
+          </div>
+          <div className="flex flex-col items-end">
+            <span className="text-sm text-gray-400 font-normal">To-Dos Cancelados</span>
+            <strong className="text-3xl text-black font-bold">{statistics.total_red}</strong>
+          </div>
+        </div>
+        <strong className="text-sm text-gray-400 font-normal">Momento Atual</strong>
+      </div>
+       <div className="w-full bg-white rounded-lg shadow-lg flex flex-col gap-4 p-6">
+        <div className="w-full flex justify-between items-center border-b-2 border-b-gray-200 pb-2">
+          <div className="px-5 py-4 bg-black rounded-lg relative top-[-3rem] flex justify-center items-center">
+            <X color="#ffff" />
+          </div>
+          <div className="flex flex-col items-end">
+            {role === 'Admin' ? (
+              <span className="text-sm text-gray-400 font-normal">To-Dos Sem Representante vinculado</span>
+            ) : (
+              <span className="text-sm text-gray-400 font-normal">To-Dos Sem Usuário vinculado</span>
+            )}
+            <strong className="text-3xl text-black font-bold">{statistics.total_without_status}</strong>
+          </div>
+        </div>
+        <strong className="text-sm text-gray-400 font-normal">Momento Atual</strong>
+      </div>
+      {role === 'Admin' && (
+        <div className="w-full bg-white rounded-lg shadow-lg flex flex-col gap-4 p-6">
+          <div className="w-full flex justify-between items-center  pb-2">
+            <div className="px-5 py-4 bg-black rounded-lg relative top-[-3rem] flex justify-center items-center">
+              <FileLock2 color="#ffff" />
+            </div>
+            <div className="flex flex-col items-end">
+              <span className="text-sm text-gray-400 font-normal">Alterar Pass-Code</span>
+              <ButtonNewPass />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
