@@ -1,6 +1,6 @@
 'use client'
 
-import { CheckCheck, DollarSign, FileLock2, X } from "lucide-react"
+import { CheckCheck, DollarSign, FileLock2, UserX2, X } from "lucide-react"
 import { ButtonNewPass } from "./ButtonNewPass"
 import { Statistics } from "@/app/dashboard/page";
 
@@ -64,7 +64,7 @@ export function BoxStatistics({ role, statistics }: Props){
        <div className="w-full bg-white rounded-lg shadow-lg flex flex-col gap-4 p-6">
         <div className="w-full flex justify-between items-center border-b-2 border-b-gray-200 pb-2">
           <div className="px-5 py-4 bg-black rounded-lg relative top-[-3rem] flex justify-center items-center">
-            <X color="#ffff" />
+            <UserX2 color="#ffff" />
           </div>
           <div className="flex flex-col items-end">
             {role === 'Admin' ? (
