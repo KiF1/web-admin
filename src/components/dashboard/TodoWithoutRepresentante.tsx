@@ -1,10 +1,10 @@
-import { RepresentanteStatistics } from "@/app/dashboard/page"
+import { Representante } from "@/app/dashboard/page"
 import { Todo } from "./Tasks"
 import { useEffect, useState } from "react"
 import { api } from "@/lib/api"
 
 interface Props{
-  representantes: RepresentanteStatistics[]
+  representantes: Representante[]
   todo: Todo
   refetch: () => void;
 }
@@ -26,7 +26,7 @@ export function TodoWithoutRepresentante({ representantes, todo, refetch }: Prop
         <select onChange={(e) => setRepresentante(e.target.value)} className='w-full bg-grayBack text-black text-sm px-4 py-2 rounded-lg'>
             <option value="">Escolha um Representante</option>
             {representantes !== undefined && representantes.map(item => (
-              <option value={item.representante_id}>{item.representante_name}</option>
+              <option value={item.id}>{item.name}</option>
             ))}
         </select>
     </div>

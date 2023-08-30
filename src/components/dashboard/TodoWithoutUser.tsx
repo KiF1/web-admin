@@ -1,8 +1,13 @@
-import { User } from "@/app/dashboard/page"
 import { Todo } from "./Tasks"
 import { useEffect, useState } from "react"
 import { api } from "@/lib/api"
 import { useQuery } from "@tanstack/react-query"
+
+export interface User{
+  id: number;
+  name: string;
+  email: string;
+}
 
 interface Props{
   todo: Todo
@@ -13,7 +18,8 @@ export function TodoWithoutUser({ todo, refetch }: Props){
   const [user, setUser] = useState<string | null>(null);
 
   const { data } = useQuery<User[]>(['users'], async () => {
-    const response = await api.get('/users/all');
+    const responseMe = await api.post('/me');
+    const response = await api.get(`/users/representante/${responseMe.data.id}`);
     return response.data;
   });
 

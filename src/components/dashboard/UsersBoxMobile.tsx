@@ -1,33 +1,40 @@
+import { RepresentanteStatistics } from "@/app/dashboard/page";
 import { api } from "@/lib/api";
 import { Trash } from "lucide-react";
 
 interface Props{
-  id: number;
-  name: string;
-  email: string;
+  user: RepresentanteStatistics
   refetch: () => void;
 }
 
-export function UsersBoxMobile({ id, email, name, refetch }: Props){
+export function UsersBoxMobile({ user, refetch }: Props){
 
   async function deleteUser(id: number){
     await api.delete(`/users/${id}`, { headers: { 'Content-Type': 'application/json' } }).then(() => refetch());
   }
 
   return(
-    <div className="w-full flex flex-col gap-4 border-b-2 border-b-gray-200 shadow-2xl p-8">
+    <div className="w-full flex flex-col gap-2 border-b-2 border-b-gray-200 shadow-2xl p-8">
       <div className="w-full">
         <strong className="text-lg text-black font-bold relative float-left mr-2">Nome:</strong>
         <div className="w-fit flex items-center gap-2">
-          <span className="text-lg text-black font-normal">{name}</span>
+          <span className="text-lg text-black font-normal">{user.representante_name}</span>
         </div>
       </div>
       <div className="w-fit">
-        <strong className="text-lg text-black font-bold relative float-left mr-2">Email:</strong>
-        <span className="text-lg text-black font-normal">{email}</span>
+        <strong className="text-lg text-black font-bold relative float-left mr-2">To-dos Finalizados:</strong>
+        <span className="text-lg text-black font-normal">{user.total_greens}</span>
+      </div>
+      <div className="w-fit">
+        <strong className="text-lg text-black font-bold relative float-left mr-2">To-dos Cancelado:</strong>
+        <span className="text-lg text-black font-normal">{user.total_reds}</span>
+      </div>
+      <div className="w-fit">
+        <strong className="text-lg text-black font-bold relative float-left mr-2">Vendas:</strong>
+        <span className="text-lg text-black font-normal">R$ {user.value_of_greens}</span>
       </div>
       <div className="w-full">
-        <button onClick={() => deleteUser(id)} type='submit' className='w-full px-4 py-2 bg-black text-white rounded-lg text-lg font-bold font-serif text-center'>
+        <button onClick={() => deleteUser(user.representante_id)} type='submit' className='w-full px-4 py-2 bg-black text-white rounded-lg text-lg font-bold font-serif text-center'>
           <Trash className='w-6 h-6 m-auto'  color='white' />
         </button>
       </div>

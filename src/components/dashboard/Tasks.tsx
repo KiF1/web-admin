@@ -4,12 +4,12 @@ import { FolderUp, Pencil, Trash } from "lucide-react";
 import { ButtonNewTodo } from "./ButtonNewTodo";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
-import { RepresentanteStatistics } from "@/app/dashboard/page";
+import { Representante } from "@/app/dashboard/page";
 import { TodoWithoutRepresentante } from "./TodoWithoutRepresentante";
 import { useEffect, useState } from "react";
 
 interface Props{
-  representantes: RepresentanteStatistics[]
+  representantes: Representante[]
 }
 
 export interface Todo{
@@ -59,7 +59,7 @@ export function Tasks({ representantes }: Props){
       <strong className="text-xl text-black font-bold">A Fazeres</strong>
       <div className="w-full flex flex-col gap-4 pb-8 border-b-2 border-b-gray-200">
         <input name="coverUrl" accept=".txt" type="file" id="media" onChange={handleFileChange} className="invisible h-0 w-0" />
-          <div className="w-full grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <ButtonNewTodo refetch={refetchTodosWithoutRepresentantes} />
             <div className="w-full flex flex-col gap-2">
               <label htmlFor="media" className="w-full p-4 bg-black text-white rounded-md flex justify-center items-center gap-4">
@@ -71,7 +71,7 @@ export function Tasks({ representantes }: Props){
               {error ? <span className="w-full text-sm text-black font-normal">Erro ao realizar atividade</span> : error === false ? <span className="w-full text-sm text-black font-normal">Sucesso ao realizar atividade</span> : <></>}
             </div>
           </div>
-        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-8">
           {todosWithoutRepresentantes !== undefined && todosWithoutRepresentantes.map(item => (
             <TodoWithoutRepresentante key={item.id} todo={item} representantes={representantes} refetch={refetchTodosWithoutRepresentantes} />
           ))}
