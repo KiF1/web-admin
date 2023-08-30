@@ -3,7 +3,6 @@
 import { HeaderDashBoard } from "@/components/Header/HeaderDashboard";
 import { BoxStatistics } from "@/components/dashboard/BoxStatistics";
 import { ButtonNewGroup } from "@/components/dashboard/ButtonNewGroup";
-import { ButtonNewPass } from "@/components/dashboard/ButtonNewPass";
 import { ButtonNewUser } from "@/components/dashboard/ButtonNewUser";
 import { GroupsBoxMobile } from "@/components/dashboard/GroupsBoxMobile";
 import { Tasks } from "@/components/dashboard/Tasks";
@@ -12,7 +11,6 @@ import { UsersBoxMobile } from "@/components/dashboard/UsersBoxMobile";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import { FileLock2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export interface User{

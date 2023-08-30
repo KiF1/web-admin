@@ -1,5 +1,6 @@
 'use client'
 
+import { queryClient } from "@/lib/react-query";
 import Cookies from "js-cookie";
 import { Home, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -11,8 +12,9 @@ interface Props{
 export function HeaderDashBoard({ title }: Props){
   const router = useRouter();
 
-  function signOut(){
-    Cookies.remove('token_role');
+  async function signOut(){
+    await Cookies.remove('token_role');
+    await queryClient.clear();
     router.push('/')
   }
 
