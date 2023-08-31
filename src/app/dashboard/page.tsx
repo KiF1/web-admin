@@ -207,17 +207,15 @@ export default function Dashboard(){
              <div className="w-full flex flex-col bg-white shadow-lg rounded-lg gap-4 p-6">
               <strong className="text-xl text-black font-bold">Ranking - To-dos Concluídos</strong>
               <div className="w-full">
-                <div className="w-full flex flex-col gap-2 shadow-2xl p-8">
-                  <ResponsiveContainer width="100%" height="100%" className="min-h-[300px]">
-                    <AreaChart width={500} height={400} data={newTopArray} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Area type="monotone" dataKey="total" stroke="#000000" fill="#000000" />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
+                <ResponsiveContainer width="100%" height="100%" className="min-h-[300px]">
+                  <AreaChart width={500} height={400} data={newTopArray} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Area type="monotone" dataKey="total" stroke="#000000" fill="#000000" />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
           </div>
           )}
@@ -225,17 +223,15 @@ export default function Dashboard(){
             <div className="w-full flex flex-col bg-white shadow-lg rounded-lg gap-4 p-6">
             <strong className="text-xl text-black font-bold">Ranking - To-dos Cancelados</strong>
             <div className="w-full">
-              <div className="w-full flex flex-col gap-2 shadow-2xl p-8">
-                <ResponsiveContainer width="100%" height="100%" className="min-h-[300px]">
-                    <AreaChart width={500} height={400} data={newWorseArray} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Area type="monotone" dataKey="total" stroke="#000000" fill="#000000" />
-                    </AreaChart>
-                  </ResponsiveContainer>
-              </div>
+              <ResponsiveContainer width="100%" height="100%" className="min-h-[300px]">
+                  <AreaChart width={500} height={400} data={newWorseArray} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Area type="monotone" dataKey="total" stroke="#000000" fill="#000000" />
+                  </AreaChart>
+                </ResponsiveContainer>
             </div>
         </div>
           )}
