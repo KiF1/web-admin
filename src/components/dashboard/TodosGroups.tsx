@@ -30,7 +30,7 @@ export function TodoGroups(){
     const response = await api.get(`/to-dos/without-user/${me?.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });
-
+  
   const { data: users } = useQuery<User[]>([`user-${me?.id}`], async () => {
     const response = await api.get(`/users/representante/${me?.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
@@ -57,7 +57,7 @@ export function TodoGroups(){
   
   return(
     <>
-      {todosWithoutUser !== undefined && users !== undefined &&  todosWithoutUser?.length > 1  && (
+      {todosWithoutUser !== undefined && users !== undefined &&  todosWithoutUser?.length >= 1  && (
         <div className="w-full flex flex-col bg-white shadow-lg rounded-lg gap-4 p-6">
           <strong className="text-xl text-black font-bold">Atribua um To-do a um usuário</strong>
           <button onClick={() => distributeTodosToUsers(users, todosWithoutUser)} className="w-fit px-8 py-4 bg-black text-white rounded-md text-center data-[disabled=true]:cursor-not-allowed">Dividir To-Dos Entre Usuários</button>

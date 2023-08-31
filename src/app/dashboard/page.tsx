@@ -5,12 +5,15 @@ import { BoxStatistics } from "@/components/dashboard/BoxStatistics";
 import { ButtonNewGroup } from "@/components/dashboard/ButtonNewGroup";
 import { ButtonNewUser } from "@/components/dashboard/ButtonNewUser";
 import { GroupsBoxMobile } from "@/components/dashboard/GroupsBoxMobile";
+import { TableGroups } from "@/components/dashboard/TableGroups";
+import { TableUsers } from "@/components/dashboard/TableUsers";
 import { Tasks } from "@/components/dashboard/Tasks";
 import { TodoGroups } from "@/components/dashboard/TodosGroups";
 import { UsersBoxMobile } from "@/components/dashboard/UsersBoxMobile";
 import { api } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useEffect, useState } from "react";
 
 export interface User{
@@ -22,6 +25,7 @@ export interface User{
 export interface RepresentanteStatistics{
   representante_id: number;
   representante_name: string;
+  percentage_resolved: string;
   total_greens: string;
   total_reds: string;
   value_of_greens: string
@@ -31,6 +35,7 @@ export interface UserStatistics{
   id: number;
   representante_id: number;
   representante_name: string;
+  percentage_resolved: string;
   total_greens: string;
   total_reds: string;
   value_of_greens: string
@@ -98,10 +103,18 @@ export default function Dashboard(){
     return response.data;
   });
 
+  const newTopArray = topTenGreen?.map(item => {
+    return { name: item.name, total: item.total_greens }
+  })
+
   const { data: topTenRed } = useQuery<TopRed[]>(['topTenRed'], async () => {
     const response = await api.get('/to-dos/top10red', { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });
+
+  const newWorseArray = topTenRed?.map(item => {
+    return { name: item.name, total: item.total_reds }
+  })
 
   const { data: statistics } = useQuery<Statistics>(['statistics'], async () => {
     const response = await api.get('/to-dos/concluded-finalized', { headers: { 'Authorization': `Bearer ${token}` } });
@@ -130,7 +143,25 @@ export default function Dashboard(){
                 )}
                 <ButtonNewUser refetch={refetch} />
               </div>
-              <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <div className="w-full flex flex-col gap-8">
+                {statisticsUsers.length >= 1 && (
+                  <div className="w-full hidden lg:flex overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="p-[0.2rem]">
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Usuário</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Vendas</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Finalizado/Cancelado</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Progresso</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Ação</th>
+                        </tr>
+                      </thead>
+                      {statisticsUsers.map(item => (
+                        <TableUsers key={item.representante_id} user={item} refetchUsers={refetch} />
+                      ))}
+                    </table>
+                  </div>
+                )}
                 {statisticsUsers.map(item => (
                   <UsersBoxMobile key={item.representante_id} user={item} refetch={refetch} />
                 ))}
@@ -147,50 +178,64 @@ export default function Dashboard(){
                   )}
                 <ButtonNewGroup refetch={refetchRepresentantes} />
               </div>
-              <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <div className="w-full flex flex-col gap-8">
+                {statisticsRepresentantes.length >= 1 && (
+                  <div className="w-full hidden lg:flex overflow-x-auto">
+                    <table className="w-full border-collapse">
+                      <thead>
+                        <tr className="p-[0.2rem]">
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Grupo</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Vendas</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Finalizado/Cancelado</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Progresso</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Ação</th>
+                        </tr>
+                      </thead>
+                      {statisticsRepresentantes.map(item => (
+                        <TableGroups  key={item.representante_id} representante={item}  refetchStatistics={refetchstatisticsRepresentantes} />
+                      ))}
+                    </table>
+                  </div>
+                )}
                 {statisticsRepresentantes.map(item => (
                   <GroupsBoxMobile key={item.representante_id} representante={item}  refetchStatistics={refetchstatisticsRepresentantes} />
                 ))}
               </div>
           </div>
           )}
-          {topTenGreen !== undefined && topTenGreen.length >= 1 && (
+          {topTenGreen !== undefined && topTenGreen.length >= 3 && (
              <div className="w-full flex flex-col bg-white shadow-lg rounded-lg gap-4 p-6">
               <strong className="text-xl text-black font-bold">Ranking - To-dos Concluídos</strong>
-              <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                  {topTenGreen.map((item, index) => (
-                  <div className="w-full flex flex-col gap-2 shadow-2xl p-8">
-                    <strong className="text-lg text-black font-bold">{index + 1}º</strong>
-                    <div className="w-full">
-                      <strong className="text-lg text-black font-bold relative float-left mr-2">Nome:</strong>
-                      <span className="text-lg text-black font-normal">{item.name}</span>
-                    </div>
-                    <div className="w-full">
-                      <strong className="text-lg text-black font-bold relative float-left mr-2">To-dos Concluidos:</strong>
-                      <span className="text-lg text-black font-normal">{item.total_greens}</span>
-                    </div>
-                  </div>
-                ))}
+              <div className="w-full">
+                <div className="w-full flex flex-col gap-2 shadow-2xl p-8">
+                  <ResponsiveContainer width="100%" height="100%" className="min-h-[300px]">
+                    <AreaChart width={500} height={400} data={newTopArray} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Area type="monotone" dataKey="total" stroke="#000000" fill="#000000" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
           </div>
           )}
-          {topTenRed !== undefined && topTenRed.length >= 1 && (
+          {topTenRed !== undefined && topTenRed.length >= 3 && (
             <div className="w-full flex flex-col bg-white shadow-lg rounded-lg gap-4 p-6">
             <strong className="text-xl text-black font-bold">Ranking - To-dos Cancelados</strong>
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {topTenRed.map((item, index) => (
-                <div className="w-full flex flex-col gap-2 shadow-2xl p-8">
-                  <strong className="text-lg text-black font-bold">{index + 1}º</strong>
-                  <div className="w-full">
-                    <strong className="text-lg text-black font-bold relative float-left mr-2">Nome:</strong>
-                    <span className="text-lg text-black font-normal">{item.name}</span>
-                  </div>
-                  <div className="w-full">
-                    <strong className="text-lg text-black font-bold relative float-left mr-2">To-dos Cancelados:</strong>
-                    <span className="text-lg text-black font-normal">{item.total_reds}</span>
-                  </div>
-                </div>
-              ))}
+            <div className="w-full">
+              <div className="w-full flex flex-col gap-2 shadow-2xl p-8">
+                <ResponsiveContainer width="100%" height="100%" className="min-h-[300px]">
+                    <AreaChart width={500} height={400} data={newWorseArray} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Area type="monotone" dataKey="total" stroke="#000000" fill="#000000" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+              </div>
             </div>
         </div>
           )}
