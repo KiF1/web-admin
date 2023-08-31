@@ -85,7 +85,7 @@ export function Tasks({ representantes }: Props){
               {error ? <span className="w-full text-sm text-black font-normal">Erro ao realizar atividade</span> : error === false ? <span className="w-full text-sm text-black font-normal">Sucesso ao realizar atividade</span> : <></>}
             </div>
           </div>
-        <div className="w-full grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-8">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {todosWithoutRepresentantes !== undefined && todosWithoutRepresentantes.map((item, index) => (
             <TodoWithoutRepresentante key={index} todo={item} representantes={representantes} refetch={refetchTodosWithoutRepresentantes} />
           ))}
