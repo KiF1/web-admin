@@ -153,7 +153,7 @@ export default function Dashboard(){
                           <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Vendas</th>
                           <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Finalizado/Cancelado</th>
                           <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Progresso</th>
-                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Ação</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-end">Ação</th>
                         </tr>
                       </thead>
                       {statisticsUsers.map(item => (
@@ -188,7 +188,7 @@ export default function Dashboard(){
                           <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Vendas</th>
                           <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Finalizado/Cancelado</th>
                           <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Progresso</th>
-                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Ação</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-end">Ação</th>
                         </tr>
                       </thead>
                       {statisticsRepresentantes.map(item => (
