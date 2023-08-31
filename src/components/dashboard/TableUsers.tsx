@@ -40,7 +40,7 @@ export function TableUsers({ user, refetchUsers }: Props){
           <User />
           {user.representante_name}
         </td>
-        <td className="py-4 text-start px-2 text-gray-400 font-normal">R$ {user.value_of_greens}</td>
+        <td className="py-4 text-center px-2 text-gray-400 font-normal">R$ {user.value_of_greens}</td>
         <td className="py-4 text-center px-2 text-gray-400 font-normal">{user.total_greens}/{user.total_reds}</td>
         <td className="py-4 text-center px-2 text-gray-400 font-normal fle flex-col gap-2">
           <span>{percentageResolved}%</span>
@@ -48,7 +48,7 @@ export function TableUsers({ user, refetchUsers }: Props){
             <Progress.Indicator className="ProgressIndicator" style={{ transform: `translateX(-${100 - progress}%)` }} />
           </Progress.Root>
         </td>
-        <td className="py-4 text-end px-2 text-gray-400 font-normal">
+        <td className="py-4 text-center px-2 text-gray-400 font-normal">
           <button onClick={() => deleteUser(user.representante_id)} type='submit' className='w-fit px-4 py-2 bg-black text-white rounded-lg text-lg font-bold font-serif text-start'>
             <Trash className='w-6 h-6' color='white' />
           </button>

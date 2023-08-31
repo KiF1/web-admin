@@ -150,10 +150,10 @@ export default function Dashboard(){
                       <thead>
                         <tr className="p-[0.2rem]">
                           <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Usuário</th>
-                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Vendas</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Vendas</th>
                           <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Finalizado/Cancelado</th>
                           <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Progresso</th>
-                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-end">Ação</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Ação</th>
                         </tr>
                       </thead>
                       {statisticsUsers.map(item => (
@@ -185,10 +185,10 @@ export default function Dashboard(){
                       <thead>
                         <tr className="p-[0.2rem]">
                           <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Grupo</th>
-                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Vendas</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Vendas</th>
                           <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Finalizado/Cancelado</th>
                           <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Progresso</th>
-                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-end">Ação</th>
+                          <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Ação</th>
                         </tr>
                       </thead>
                       {statisticsRepresentantes.map(item => (
