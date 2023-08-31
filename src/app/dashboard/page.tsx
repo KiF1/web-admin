@@ -205,7 +205,7 @@ export default function Dashboard(){
           )}
           {topTenGreen !== undefined && topTenGreen.length >= 3 && (
              <div className="w-full flex flex-col bg-white shadow-lg rounded-lg gap-4 p-6">
-              <strong className="text-xl text-black font-bold">Ranking - To-dos Concluídos</strong>
+              <strong className="text-xl text-black font-bold">Estatística - To-dos Concluídos</strong>
               <div className="w-full">
                 <ResponsiveContainer width="100%" height="100%" className="min-h-[300px]">
                   <AreaChart width={500} height={400} data={newTopArray} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -221,7 +221,7 @@ export default function Dashboard(){
           )}
           {topTenRed !== undefined && topTenRed.length >= 3 && (
             <div className="w-full flex flex-col bg-white shadow-lg rounded-lg gap-4 p-6">
-            <strong className="text-xl text-black font-bold">Ranking - To-dos Cancelados</strong>
+            <strong className="text-xl text-black font-bold">Estatística - To-dos Cancelados</strong>
             <div className="w-full">
               <ResponsiveContainer width="100%" height="100%" className="min-h-[300px]">
                   <AreaChart width={500} height={400} data={newWorseArray} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
