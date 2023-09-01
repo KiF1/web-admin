@@ -10,9 +10,11 @@ import Cookies from "js-cookie";
 interface Props{
   user: UserStatistics
   refetchUsers: () => void;
+  refetchStatisticsUsers?: () => void;
+  refetchStatistics: () => void;
 }
 
-export function TableUsers({ user, refetchUsers }: Props){
+export function TableUsers({ user, refetchUsers, refetchStatisticsUsers, refetchStatistics }: Props){
   const [progress, setProgress] = useState(13);
   const percentageResolved = Math.floor(Number(user.percentage_resolved))
 
@@ -30,7 +32,13 @@ export function TableUsers({ user, refetchUsers }: Props){
     await api.delete(`/users/${id}`, { headers: { 
       'Content-Type': 'application/json', 
       'Authorization': `Bearer ${token}`  
-    }}).then(() => refetchUsers());
+    }}).then(() => {
+      refetchUsers()
+      refetchStatistics()
+      if(refetchStatisticsUsers){
+        refetchStatisticsUsers();
+      }
+    });
   }
 
   return(

@@ -9,10 +9,12 @@ import * as Progress from '@radix-ui/react-progress';
 
 interface Props{
   user: UserStatistics
-  refetch: () => void;
+  refetchUsers: () => void;
+  refetchStatisticsUsers?: () => void;
+  refetchStatistics: () => void;
 }
 
-export function UsersBoxMobile({ user, refetch }: Props){
+export function UsersBoxMobile({ user, refetchUsers, refetchStatistics, refetchStatisticsUsers }: Props){
   const [progress, setProgress] = useState(13);
   const percentageResolved = Math.floor(Number(user.percentage_resolved))
 
@@ -29,7 +31,13 @@ export function UsersBoxMobile({ user, refetch }: Props){
     await api.delete(`/users/${id}`, { headers: { 
       'Content-Type': 'application/json', 
       'Authorization': `Bearer ${token}`  
-    }}).then(() => refetch());
+    }}).then(() =>{
+      refetchUsers()
+      refetchStatistics()
+      if(refetchStatisticsUsers){
+        refetchStatisticsUsers();
+      }
+    });
   }
 
   return(

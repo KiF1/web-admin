@@ -64,6 +64,11 @@ export interface Statistics {
   total_without_status: number; 
 };
 
+interface UsersInRepresentantes{
+  representante: string;
+  users: UserStatistics[]
+}
+
 
 export default function Dashboard(){
   const [errorMe, setErroMe] = useState<boolean>(false);
@@ -93,7 +98,7 @@ export default function Dashboard(){
     return response.data;
   });
 
-  const { data: statisticsUsers } = useQuery<UserStatistics[]>(['statisticsUsers'], async () => {
+  const { data: statisticsUsers, refetch: refetchStatisticsUsers } = useQuery<UserStatistics[]>(['statisticsUsers'], async () => {
     const response = await api.get('/users', { headers: { 'Authorization': `Bearer ${token}` } });
     return response.data;
   });
@@ -118,6 +123,12 @@ export default function Dashboard(){
 
   const { data: statistics } = useQuery<Statistics>(['statistics'], async () => {
     const response = await api.get('/to-dos/concluded-finalized', { headers: { 'Authorization': `Bearer ${token}` } });
+    return response.data;
+  });
+
+  const { data: statisticsUsersInRepresentantes, refetch: refetchStatisticsUsersInRepresentantes } = useQuery<UsersInRepresentantes[]>(['statisticsUsersInRepresentantes'], async () => {
+    const response = await api.get('/admin/representantes/estatisticas', { headers: { 'Authorization': `Bearer ${token}` } });
+    response.data = Object.values(response.data)
     return response.data;
   });
 
@@ -157,13 +168,13 @@ export default function Dashboard(){
                         </tr>
                       </thead>
                       {statisticsUsers.map(item => (
-                        <TableUsers key={item.representante_id} user={item} refetchUsers={refetch} />
+                        <TableUsers key={item.representante_id} user={item} refetchUsers={refetch} refetchStatistics={refetchStatisticsUsers} />
                       ))}
                     </table>
                   </div>
                 )}
                 {statisticsUsers.map(item => (
-                  <UsersBoxMobile key={item.representante_id} user={item} refetch={refetch} />
+                  <UsersBoxMobile key={item.representante_id} user={item} refetchUsers={refetch} refetchStatistics={refetchStatisticsUsers} />
                 ))}
               </div>
             </div>
@@ -199,6 +210,41 @@ export default function Dashboard(){
                 )}
                 {statisticsRepresentantes.map(item => (
                   <GroupsBoxMobile key={item.representante_id} representante={item}  refetchStatistics={refetchstatisticsRepresentantes} />
+                ))}
+              </div>
+          </div>
+          )}
+          {role === 'Admin' && statisticsUsersInRepresentantes !== undefined && statisticsUsersInRepresentantes.length >= 1 &&   (
+            <div className="w-full flex flex-col bg-white shadow-lg rounded-lg gap-4 p-6">
+              <strong className="text-xl text-black font-bold">Estatísticas dos Usuários</strong> 
+              <div className="w-full flex flex-col gap-8">
+                {statisticsUsersInRepresentantes.map(item => (
+                  <div className="w-full flex flex-col gap-4">
+                    {item.users.length >= 1 && (
+                      <>
+                        <strong className="text-lg text-black font-normal">Representante: {item.representante}</strong> 
+                        <div className="w-full hidden lg:flex overflow-x-auto">
+                          <table className="w-full border-collapse">
+                            <thead>
+                              <tr className="p-[0.2rem]">
+                                <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-start">Usuário</th>
+                                <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Vendas</th>
+                                <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Finalizado/Cancelado</th>
+                                <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Progresso</th>
+                                <th className="p-2 border-b-2 border-b-gray-200 font-normal text-gray-400 text-lg text-center">Ação</th>
+                              </tr>
+                            </thead>
+                            {item.users.map(item => (
+                              <TableUsers key={item.id} user={item} refetchUsers={refetch} refetchStatistics={refetchStatisticsUsers} refetchStatisticsUsers={refetchStatisticsUsersInRepresentantes} />
+                            ))}
+                          </table>
+                        </div>
+                        {item.users.map(item => (
+                          <UsersBoxMobile key={item.id} user={item} refetchUsers={refetch} refetchStatistics={refetchStatisticsUsers} refetchStatisticsUsers={refetchStatisticsUsersInRepresentantes} />
+                        ))}
+                      </>
+                    )}
+                  </div>
                 ))}
               </div>
           </div>
