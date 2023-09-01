@@ -9,9 +9,10 @@ import { useState, useEffect } from "react";
 interface Props{
   representante: RepresentanteStatistics
   refetchStatistics: () => void;
+  refetchRepresentantes: () => void;
 }
 
-export function TableGroups({ representante, refetchStatistics }: Props){
+export function TableGroups({ representante, refetchStatistics, refetchRepresentantes }: Props){
   const [progress, setProgress] = useState(13);
   const percentageResolved = Math.floor(Number(representante.percentage_resolved))
 
@@ -23,6 +24,7 @@ export function TableGroups({ representante, refetchStatistics }: Props){
   async function deleteUser(id: number){
     await api.delete(`/admin/representantes/${id}`, { headers: { 'Content-Type': 'application/json' } }).then(() => {
       refetchStatistics();
+      refetchRepresentantes();
     });
   }
 

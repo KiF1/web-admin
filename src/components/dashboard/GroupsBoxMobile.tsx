@@ -10,9 +10,10 @@ import * as Progress from '@radix-ui/react-progress';
 interface Props{
   representante: RepresentanteStatistics
   refetchStatistics: () => void;
+  refetchRepresentantes: () => void;
 }
 
-export function GroupsBoxMobile({ representante, refetchStatistics }: Props){
+export function GroupsBoxMobile({ representante, refetchStatistics, refetchRepresentantes }: Props){
   const [progress, setProgress] = useState(13);
   const percentageResolved = Math.floor(Number(representante.percentage_resolved));
 
@@ -31,6 +32,7 @@ export function GroupsBoxMobile({ representante, refetchStatistics }: Props){
       'Authorization': `Bearer ${token}`  
     }}).then(() => {
       refetchStatistics();
+      refetchRepresentantes();
     })}
 
   return(

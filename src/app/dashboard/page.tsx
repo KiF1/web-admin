@@ -203,13 +203,13 @@ export default function Dashboard(){
                         </tr>
                       </thead>
                       {statisticsRepresentantes.map(item => (
-                        <TableGroups  key={item.representante_id} representante={item}  refetchStatistics={refetchstatisticsRepresentantes} />
+                        <TableGroups  key={item.representante_id} representante={item}  refetchStatistics={refetchstatisticsRepresentantes} refetchRepresentantes={refetchRepresentantes} />
                       ))}
                     </table>
                   </div>
                 )}
                 {statisticsRepresentantes.map(item => (
-                  <GroupsBoxMobile key={item.representante_id} representante={item}  refetchStatistics={refetchstatisticsRepresentantes} />
+                  <GroupsBoxMobile key={item.representante_id} representante={item}  refetchStatistics={refetchstatisticsRepresentantes} refetchRepresentantes={refetchRepresentantes} />
                 ))}
               </div>
           </div>
